@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Snek!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <!--
+        Created from: https://medium.freecodecamp.org/think-like-a-programmer-how-to-build-snake-using-only-javascript-html-and-css-7b1479c3339e
+    -->
+
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+
+    <script>
+        const CANVAS_BORDER_COLOUR = 'black';
+        const CANVAS_BACKGROUND_COLOUR = 'white';
+        const SNEK_COLOUR = 'lightgreen';
+        const SNEK_BORDER_COLOUR = 'darkgreen';
+
+        let snek = [
+            {x: 150, y: 150},
+            {x: 140, y: 150},
+            {x: 130, y: 150},
+            {x: 120, y: 150},
+            {x: 110, y: 150}
+        ]
+
+        let dx = 10;
+        let dy = 0;
+
+        var gameCanvas = document.getElementById("gameCanvas");
+        var ctx = gameCanvas.getContext("2d");
+
+        main();
+        document.addEventListener("keydown", changeDirection);
+
+        function main() {
+            setTimeout(function onTick() {
+                clearCanvas();
+                advanceSnek();
+                drawSnek();
+
+                main();
+            }, 100)
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = CANVAS_BACKGROUND_COLOUR;
+            ctx.strokeStyle = CANVAS_BORDER_COLOUR;
+
+            ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            ctx.strokeRect(0, 0, gameCanvas.width, gameCanvas.height);
+        }
+
+        function drawSnek() {
+            snek.forEach(drawSnekPart)
+        }
+
+        function drawSnekPart(snekPart) {
+            ctx.fillStyle = SNEK_COLOUR;
+            ctx.strokeStyle = SNEK_BORDER_COLOUR;
+
+            ctx.fillRect(snekPart.x, snekPart.y, 10, 10);
+            ctx.strokeRect(snekPart.x, snekPart.y, 10, 10);
+        }
+
+        function advanceSnek() {
+            const head = {x: snek[0].x + dx, y: snek[0].y + dy};
+            
+            snek.unshift(head);
+            snek.pop();
+        }
+
+        function randomTen(min, max) {
+            return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+        }
+
+        function createFood() {
+
+        }
+
+        function changeDirection(event) {
+            const LEFT_KEY = 37;
+            const RIGHT_KEY = 39;
+            const UP_KEY = 38;
+            const DOWN_KEY = 40;
+
+            const keyPressed = event.keyCode;
+            const goingUp = dy === -10;
+            const goingDown = dy === 10;
+            const goingRigt = dx === 10;
+            const goingLeft = dx === -10;
+
+            if (keyPressed === LEFT_Key && !goingRigt) {
+                dx = -10;
+                dy = 0;
+            }
+
+            if (keyPressed === UP_KEY && !goingDown) {
+                dx = 0;
+                dy = -10;
+            }
+
+            if (keyPressed === RIGHT_KEY && !goingLeft) {
+                dx = 10;
+                dy = 0;
+            }
+
+            if (keyPressed === DOWN_KEY && !goingUp) {
+                dx = 0;
+                dy = 10;
+            }
+        }
+    </script>
+</body>
+</html>
